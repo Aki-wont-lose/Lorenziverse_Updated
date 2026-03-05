@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lorenziverse Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     LOGIN
+══════════════════════════════════════ -->
+<div class="login-page" id="loginPage">
+    <div class="login-bg"></div>
+    <div class="login-card">
+        <div class="login-header">
+            <div class="login-logo"><i data-lucide="graduation-cap" size="28"></i></div>
+            <h2>Lorenziverse Portal</h2>
+            <p>Grade 12 · STEM-A · S.Y. 2025–2026</p>
+        </div>
+
+        <div class="role-sw">
+            <button class="rbtn active" onclick="switchRole('student',this)"><i data-lucide="user" size="13"></i> Student</button>
+            <button class="rbtn" onclick="switchRole('teacher',this)"><i data-lucide="briefcase" size="13"></i> Teacher</button>
+        </div>
+
+        <div id="sFields">
+            <div class="fg"><label>LRN</label><input id="sLrn" class="fi" placeholder=""></div>
+            <div class="fg"><label>Password</label><input id="sPass" type="password" class="fi" placeholder=""></div>
+        </div>
+        <div id="tFields" style="display:none">
+            <div class="fg"><label>Employee ID</label><input id="tId" class="fi" placeholder=""></div>
+            <div class="fg"><label>Password</label><input id="tPass" type="password" class="fi" placeholder=""></div>
+        </div>
+
+        <button class="login-btn" onclick="doLogin()"><i data-lucide="log-in" size="15"></i> Sign In</button>
+        <div id="loginErr" class="errmsg"></div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     STUDENT PORTAL
+══════════════════════════════════════ -->
+<div class="portal" id="studentPortal">
+    <aside class="sidebar">
+        <div class="sb-brand">
+            <div class="sb-icon"><i data-lucide="graduation-cap" size="15"></i></div>
+            <div><div class="sb-name">Lorenziverse</div><div class="sb-sub">Student Portal</div></div>
+        </div>
+        <div class="sb-profile">
+            <div class="av" id="sAv">??</div>
+            <div><div class="pname" id="sName">—</div><div class="ptag" id="sTag">—</div></div>
+        </div>
+        <nav style="flex:1;display:flex;flex-direction:column;gap:2px;">
+            <div class="ni active" onclick="sTab('sDash',this)"><i data-lucide="layout-dashboard" size="15"></i> Dashboard</div>
+            <div class="ni" onclick="sTab('sGrades',this)"><i data-lucide="award" size="15"></i> My Grades</div>
+            <div class="ni" onclick="sTab('sWork',this)"><i data-lucide="clipboard-list" size="15"></i> School Works</div>
+            <div class="ni" onclick="sTab('sAtt',this)"><i data-lucide="calendar" size="15"></i> Attendance</div>
+            <div class="ni" onclick="sTab('sFlash',this)"><i data-lucide="zap" size="15"></i> Flashcards</div>
+            <div class="ni" onclick="sTab('sProfile',this)"><i data-lucide="user" size="15"></i> Profile</div>
+        </nav>
+        <button onclick="doLogout()" class="logout-btn"><i data-lucide="log-out" size="15"></i> Sign Out</button>
+    </aside>
+
+    <main class="main">
+
+        <!-- DASHBOARD -->
+        <div id="sDash" class="tab active">
+            <div class="ph">
+                <div><h2 class="pt" id="sGreet">Welcome!</h2><p class="ps">Your academic snapshot.</p></div>
+                <div class="date-chip" id="sDate"></div>
+            </div>
+            <div class="stat-grid">
+                <div class="sc blue"><div class="si"><i data-lucide="award" size="18"></i></div><div><small>GWA</small><div class="sv" id="dGWA">—</div></div></div>
+                <div class="sc green"><div class="si"><i data-lucide="calendar-check" size="18"></i></div><div><small>Attendance</small><div class="sv" id="dAtt">—</div></div></div>
+                <div class="sc amber"><div class="si"><i data-lucide="clock" size="18"></i></div><div><small>Pending Tasks</small><div class="sv" id="dPend">0</div></div></div>
+                <div class="sc purple"><div class="si"><i data-lucide="check-circle" size="18"></i></div><div><small>Teacher Checked</small><div class="sv" id="dChecked">0</div></div></div>
+            </div>
+            <div class="dash-grid">
+                <div>
+                    <div class="card">
+                        <div class="ch"><h3><i data-lucide="alert-circle" size="15"></i> Pending Tasks</h3></div>
+                        <div id="dTaskList"></div>
+                    </div>
+                    <div class="card">
+                        <div class="ch"><h3><i data-lucide="bar-chart-2" size="15"></i> Grade Overview</h3></div>
+                        <div id="dGradeBar"></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="card" style="padding:14px;">
+                        <div class="ch"><h4><i data-lucide="calendar" size="13"></i> January 2026</h4></div>
+                        <div class="cal-grid" id="miniCal"></div>
+                    </div>
+                    <div class="card ann-card">
+                        <div class="ann-date">JAN 26, 2026</div>
+                        <p>Q3 starts February! Complete all pending activities before the quarter ends.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MY GRADES -->
+        <div id="sGrades" class="tab">
+            <div class="ph">
+                <div><h2 class="pt">My Grades</h2><p class="ps">Official grades — set by teachers only. Read-only.</p></div>
+                <div class="gwa-chip"><small>GWA</small><div id="sGwaVal">—</div></div>
+            </div>
+            <div class="card">
+                <table class="gtable">
+                    <thead><tr>
+                        <th>Subject</th>
+                        <th style="text-align:center">Q1</th><th style="text-align:center">Q2</th>
+                        <th style="text-align:center">Q3</th><th style="text-align:center">Q4</th>
+                        <th style="text-align:center">Average</th><th>Status</th>
+                    </tr></thead>
+                    <tbody id="sGradeBody"></tbody>
+                </table>
+            </div>
+            <!-- GWA CALCULATOR - student only, no edit to official grades -->
+            <div class="card">
+                <div class="ch">
+                    <h3><i data-lucide="calculator" size="15"></i> GWA Calculator <span class="badge bi">Practice only</span></h3>
+                </div>
+                <p style="font-size:12px;color:var(--tm);margin:0 0 14px;">Try different hypothetical grades. This does NOT change your official grades above.</p>
+                <table class="gtable">
+                    <thead><tr><th>Subject</th><th style="text-align:center">Input Grade</th><th style="text-align:center">Result</th></tr></thead>
+                    <tbody id="sCalcBody"></tbody>
+                </table>
+                <div style="text-align:right;margin-top:12px;font-weight:700;color:var(--primary);">Estimated GWA: <span id="sCalcGwa">—</span></div>
+            </div>
+        </div>
+
+        <!-- SCHOOL WORKS -->
+        <div id="sWork" class="tab">
+            <div class="ph">
+                <h2 class="pt">School Works</h2>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                    <button class="fbtn active" onclick="filterTasks('all',this)">All</button>
+                    <button class="fbtn" onclick="filterTasks('pending',this)">Pending</button>
+                    <button class="fbtn" onclick="filterTasks('submitted',this)">Submitted</button>
+                    <button class="fbtn" onclick="filterTasks('checked',this)">Checked</button>
+                </div>
+            </div>
+            <div id="sWorkList"></div>
+        </div>
+
+        <!-- ATTENDANCE -->
+        <div id="sAtt" class="tab">
+            <div class="ph">
+                <h2 class="pt">My Attendance</h2>
+                <div style="display:flex;gap:6px;">
+                    <button class="mbtn active" onclick="switchMonth('2026-01','January 2026',this)">January</button>
+                    <button class="mbtn" onclick="switchMonth('2026-02','February 2026',this)">February</button>
+                    <button class="mbtn" onclick="switchMonth('2026-03','March 2026',this)">March</button>
+                </div>
+            </div>
+            <div class="att-stats" id="sAttStats"></div>
+            <div class="card">
+                <div class="legend">
+                    <span class="ld present"></span>Present
+                    <span class="ld late" style="margin-left:14px;"></span>Late
+                    <span class="ld absent" style="margin-left:14px;"></span>Absent
+                </div>
+                <div class="cal-grid full" id="sAttCal"></div>
+            </div>
+        </div>
+
+        <!-- FLASHCARDS -->
+        <div id="sFlash" class="tab">
+            <div class="ph"><h2 class="pt">Flashcards</h2></div>
+            <div class="card">
+                <div class="ch"><h3><i data-lucide="plus-circle" size="15"></i> Add New Card</h3></div>
+                <div class="flash-grid">
+                    <input id="fQ" class="fi" placeholder="Question" style="grid-column:span 2;">
+                    <input id="fA" class="fi" placeholder="A">
+                    <input id="fB" class="fi" placeholder="B">
+                    <input id="fC" class="fi" placeholder="C">
+                    <input id="fD" class="fi" placeholder="D">
+                    <input id="fCorr" class="fi" placeholder="Correct answer (A/B/C/D)" style="grid-column:span 2;">
+                </div>
+                <button class="btnp" style="width:100%;margin-top:10px;" onclick="addFlashCard()"><i data-lucide="plus" size="13"></i> Add Card</button>
+                <div id="flashDeck" style="margin-top:18px;"></div>
+            </div>
+        </div>
+
+        <!-- PROFILE -->
+        <div id="sProfile" class="tab">
+            <div class="profile-hero">
+                <div class="profile-av" id="sProfileAv">??</div>
+                <div>
+                    <h2 style="margin:0;font-size:24px;" id="sProfileName">—</h2>
+                    <p id="sProfileSub" style="margin:5px 0 0;opacity:.8;font-size:14px;">—</p>
+                </div>
+            </div>
+            <div class="card">
+                <h3 style="margin:0 0 16px;">Account Information</h3>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+                    <div class="fg"><label>Full Name</label><input class="fi" id="pName" readonly></div>
+                    <div class="fg"><label>LRN</label><input class="fi" id="pLrn" readonly></div>
+                    <div class="fg"><label>Section</label><input class="fi" value="STEM-A" readonly></div>
+                    <div class="fg"><label>Grade Level</label><input class="fi" value="Grade 12" readonly></div>
+                    <div class="fg"><label>School Year</label><input class="fi" value="2025 – 2026" readonly></div>
+                    <div class="fg"><label>Email</label><input class="fi" value="lorenziverse@liceo.edu.ph" readonly></div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<!-- ══════════════════════════════════════
+     TEACHER PORTAL
+══════════════════════════════════════ -->
+<div class="portal" id="teacherPortal">
+    <aside class="sidebar t-sidebar">
+        <div class="sb-brand">
+            <div class="sb-icon t-icon"><i data-lucide="briefcase" size="15"></i></div>
+            <div><div class="sb-name">Lorenziverse</div><div class="sb-sub">Teacher Portal</div></div>
+        </div>
+        <div class="sb-profile">
+            <div class="av t-av">T</div>
+            <div><div class="pname" id="tName">—</div><div class="ptag" id="tSubTag">—</div></div>
+        </div>
+        <nav style="flex:1;display:flex;flex-direction:column;gap:2px;">
+            <div class="ni active" onclick="tTab('tDash',this)"><i data-lucide="layout-dashboard" size="15"></i> Overview</div>
+            <div class="ni" onclick="tTab('tGrades',this)"><i data-lucide="award" size="15"></i> Enter Grades</div>
+            <div class="ni" onclick="tTab('tAtt',this)"><i data-lucide="calendar" size="15"></i> Attendance</div>
+            <div class="ni" onclick="tTab('tActs',this)"><i data-lucide="clipboard-list" size="15"></i> Activities</div>
+            <div class="ni" onclick="tTab('tStudents',this)"><i data-lucide="users" size="15"></i> Students</div>
+        </nav>
+        <button onclick="doLogout()" class="logout-btn"><i data-lucide="log-out" size="15"></i> Sign Out</button>
+    </aside>
+
+    <main class="main">
+
+        <!-- TEACHER DASHBOARD -->
+        <div id="tDash" class="tab active">
+            <div class="ph">
+                <div><h2 class="pt" id="tWelcome">Overview</h2><p class="ps" id="tSubSub">—</p></div>
+                <div class="date-chip" id="tDate"></div>
+            </div>
+            <div class="stat-grid">
+                <div class="sc blue"><div class="si"><i data-lucide="users" size="18"></i></div><div><small>Students</small><div class="sv">12</div></div></div>
+                <div class="sc green"><div class="si"><i data-lucide="trending-up" size="18"></i></div><div><small>Class Average</small><div class="sv" id="tAvg">—</div></div></div>
+                <div class="sc amber"><div class="si"><i data-lucide="inbox" size="18"></i></div><div><small>To Review</small><div class="sv" id="tToReview">0</div></div></div>
+                <div class="sc purple"><div class="si"><i data-lucide="clipboard-list" size="18"></i></div><div><small>Activities</small><div class="sv" id="tActCount">0</div></div></div>
+            </div>
+            <div class="card">
+                <div class="ch"><h3><i data-lucide="inbox" size="15"></i> Submissions to Review</h3></div>
+                <div id="tReviewList"></div>
+            </div>
+        </div>
+
+        <!-- ENTER GRADES -->
+        <div id="tGrades" class="tab">
+            <div class="ph">
+                <h2 class="pt">Enter Official Grades</h2>
+                <div style="display:flex;gap:8px;align-items:center;">
+                    <label style="font-size:12px;font-weight:700;color:var(--tm);">Quarter:</label>
+                    <select id="tQtr" class="fi" style="width:auto;" onchange="renderTGrades()">
+                        <option value="q1">Q1</option><option value="q2">Q2</option>
+                        <option value="q3">Q3</option><option value="q4" selected>Q4</option>
+                    </select>
+                    <button class="btnp" onclick="saveAllGrades()"><i data-lucide="save" size="13"></i> Save All</button>
+                </div>
+            </div>
+            <div class="info-bar"><i data-lucide="info" size="13"></i> Grades saved here appear instantly in each student's <strong>My Grades</strong> tab.</div>
+            <div class="card">
+                <table class="gtable">
+                    <thead><tr><th>#</th><th>Student Name</th><th>LRN</th><th style="text-align:center">Grade</th><th style="text-align:center">Remarks</th></tr></thead>
+                    <tbody id="tGradeBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ATTENDANCE -->
+        <div id="tAtt" class="tab">
+            <div class="ph">
+                <h2 class="pt">Mark Attendance</h2>
+                <div style="display:flex;gap:8px;align-items:center;">
+                    <input type="date" class="fi" id="tAttDate" style="width:auto;">
+                    <button class="btnp" onclick="saveAtt()"><i data-lucide="save" size="13"></i> Save</button>
+                </div>
+            </div>
+            <div class="info-bar"><i data-lucide="info" size="13"></i> Saved attendance appears instantly in each student's <strong>Attendance</strong> tab.</div>
+            <div class="card">
+                <div style="display:flex;gap:8px;margin-bottom:14px;">
+                    <button class="btnp" onclick="markAllPresent()"><i data-lucide="check-circle" size="13"></i> All Present</button>
+                    <button class="btno" onclick="loadExistingAtt()"><i data-lucide="refresh-cw" size="13"></i> Load Saved</button>
+                </div>
+                <table class="gtable">
+                    <thead><tr><th>#</th><th>Student Name</th>
+                        <th style="text-align:center"><span class="ld present" style="display:inline-block;vertical-align:middle;"></span> Present</th>
+                        <th style="text-align:center"><span class="ld late" style="display:inline-block;vertical-align:middle;"></span> Late</th>
+                        <th style="text-align:center"><span class="ld absent" style="display:inline-block;vertical-align:middle;"></span> Absent</th>
+                        <th>Remarks</th>
+                    </tr></thead>
+                    <tbody id="tAttBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ACTIVITIES -->
+        <div id="tActs" class="tab">
+            <div class="ph">
+                <h2 class="pt">Activities & Tasks</h2>
+                <button class="btnp" onclick="openActModal()"><i data-lucide="plus" size="13"></i> New Activity</button>
+            </div>
+            <div id="tActList"></div>
+        </div>
+
+        <!-- STUDENTS -->
+        <div id="tStudents" class="tab">
+            <div class="ph"><h2 class="pt">Student List</h2></div>
+            <div class="card">
+                <table class="gtable">
+                    <thead><tr><th>#</th><th>Name</th><th>LRN</th><th style="text-align:center">Grade</th><th style="text-align:center">Attendance</th><th style="text-align:center">Pending</th><th></th></tr></thead>
+                    <tbody id="tStudentBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<!-- ══════════════════════════════════════
+     ACTIVITY MODAL
+══════════════════════════════════════ -->
+<div class="modal-bg" id="actModal">
+    <div class="modal">
+        <div class="mh"><h3><i data-lucide="plus-circle" size="16"></i> New Activity</h3><button onclick="closeActModal()" class="xbtn"><i data-lucide="x" size="16"></i></button></div>
+        <div class="fg"><label>Title</label><input class="fi" id="actTitle" placeholder="e.g. Lab Report #5"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div class="fg"><label>Type</label>
+                <select class="fi" id="actType">
+                    <option>Lab Report</option><option>Problem Set</option><option>Essay</option>
+                    <option>Quiz</option><option>Exam</option><option>Project</option><option>Seatwork</option>
+                </select>
+            </div>
+            <div class="fg"><label>Total Score</label><input type="number" class="fi" id="actTotal" placeholder="100"></div>
+        </div>
+        <div class="fg"><label>Due Date</label><input type="date" class="fi" id="actDue"></div>
+        <div class="fg"><label>Instructions (optional)</label><textarea class="fi" id="actInst" rows="3" placeholder="Instructions for students..."></textarea></div>
+        <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px;">
+            <button class="btno" onclick="closeActModal()">Cancel</button>
+            <button class="btnp" onclick="saveActivity()"><i data-lucide="save" size="13"></i> Create</button>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SCORE MODAL
+══════════════════════════════════════ -->
+<div class="modal-bg" id="scoreModal">
+    <div class="modal" style="max-width:700px;">
+        <div class="mh"><h3 id="scoreMTitle">Enter Scores</h3><button onclick="closeScoreModal()" class="xbtn"><i data-lucide="x" size="16"></i></button></div>
+        <div class="info-bar" style="margin-bottom:14px;"><i data-lucide="info" size="13"></i> Scores saved here are immediately visible to students.</div>
+        <table class="gtable">
+            <thead><tr><th>#</th><th>Student</th><th style="text-align:center">Score</th><th>Submitted</th><th style="text-align:center">Status</th><th>Remarks</th></tr></thead>
+            <tbody id="scoreBody"></tbody>
+        </table>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;">
+            <div id="scoreAvg" style="font-size:12px;color:var(--tm);font-weight:600;"></div>
+            <button class="btnp" onclick="saveScores()"><i data-lucide="save" size="13"></i> Save All Scores</button>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     STUDENT DETAIL MODAL
+══════════════════════════════════════ -->
+<div class="modal-bg" id="detailModal">
+    <div class="modal" style="max-width:580px;">
+        <div class="mh"><h3 id="detailName">Student</h3><button onclick="closeDetail()" class="xbtn"><i data-lucide="x" size="16"></i></button></div>
+        <div id="detailBody"></div>
+    </div>
+</div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
