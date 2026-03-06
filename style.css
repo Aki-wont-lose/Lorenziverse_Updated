@@ -30,6 +30,12 @@ textarea.fi{resize:vertical;line-height:1.5;}
 .login-btn:hover{background:var(--ph);transform:translateY(-1px);box-shadow:0 8px 20px rgba(30,58,138,.3);}
 .errmsg{color:var(--bad);text-align:center;font-size:12px;margin-top:10px;font-weight:700;min-height:16px;}
 
+/* ── PASSWORD TOGGLE ── */
+.pw-wrap{position:relative;display:flex;align-items:center;}
+.pw-wrap .fi{padding-right:38px;width:100%;}
+.pw-eye{position:absolute;right:10px;background:none;border:none;cursor:pointer;color:var(--tm);display:flex;align-items:center;padding:2px;border-radius:5px;transition:color .15s;}
+.pw-eye:hover{color:var(--primary);}
+
 /* ── LAYOUT ── */
 .portal{display:none;height:100vh;grid-template-columns:252px 1fr;overflow:hidden;}
 .sidebar{background:var(--sb);color:white;padding:20px 13px;display:flex;flex-direction:column;gap:14px;overflow-y:auto;}
